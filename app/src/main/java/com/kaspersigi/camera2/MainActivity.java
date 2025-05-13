@@ -1,10 +1,13 @@
 package com.kaspersigi.camera2;
 
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "Click " + getString(R.string.button1));
+                // 请求相机权限
+                requestPermissions();
             }
         });
 
@@ -73,5 +78,23 @@ public class MainActivity extends AppCompatActivity {
                 Log.i(TAG, "Click " + getString(R.string.button7));
             }
         });
+
+        Button button8 = findViewById(R.id.button8);
+        button8.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "Click " + getString(R.string.button8));
+            }
+        });
+    }
+
+    private void requestPermissions() {
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            Log.i(TAG, "Request Permission");
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(new String[]{ android.Manifest.permission.CAMERA }, 100);
+            }
+        }
     }
 }

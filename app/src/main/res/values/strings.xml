@@ -1,11 +1,12 @@
 <resources>
     <string name="app_name">Camera2</string>
     <string name="title">Camera2 Demo</string>
-    <string name="button1">Open Camera</string>
-    <string name="button2">Start Preview</string>
-    <string name="button3">Stop Preview</string>
-    <string name="button4">Take Picture</string>
-    <string name="button5">Release</string>
-    <string name="button6">View</string>
-    <string name="button7">Switch</string>
+    <string name="button1">Request Permission</string>
+    <string name="button2">Open Camera</string>
+    <string name="button3">Create Session</string>
+    <string name="button4">Start Preview</string>
+    <string name="button5">Take Picture</string>
+    <string name="button6">Stop Preview</string>
+    <string name="button7">Destroy Session</string>
+    <string name="button8">Close Camera</string>
 </resources>
