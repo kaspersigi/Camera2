@@ -1,17 +1,24 @@
 package com.kaspersigi.camera2;
 
+import android.content.Context;
 import android.content.pm.PackageManager;
+import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CameraCharacteristics;
+import android.hardware.camera2.CameraManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "CameraDemo";
+    private String mCameraId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "Click " + getString(R.string.button2));
+                openCamera();
             }
         });
 
@@ -90,10 +98,43 @@ public class MainActivity extends AppCompatActivity {
 
     private void requestPermissions() {
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-            Log.i(TAG, "Request Permission");
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getBaseContext(), "Permission has been granted", Toast.LENGTH_SHORT).show();
+                }
+            });
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 requestPermissions(new String[]{ android.Manifest.permission.CAMERA }, 100);
+            }
+        }
+    }
+
+    private void openCamera() {
+        CameraManager cameraManager = (CameraManager)getSystemService(Context.CAMERA_SERVICE);
+        String[] cameraList;
+        try {
+            cameraList = cameraManager.getCameraIdList();
+        } catch (CameraAccessException e) {
+            throw new RuntimeException(e);
+        }
+        mCameraId = null;
+        for (String cameraId : cameraList) {
+            CameraCharacteristics cameraCharacteristics;
+            try {
+                cameraCharacteristics = cameraManager.getCameraCharacteristics(cameraId);
+            } catch (CameraAccessException e) {
+                throw new RuntimeException(e);
+            }
+            if (CameraCharacteristics.LENS_FACING_BACK == cameraCharacteristics.get(CameraCharacteristics.LENS_FACING)) {
+                mCameraId = cameraId;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getBaseContext(), "Open CameraId " + mCameraId, Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         }
     }
